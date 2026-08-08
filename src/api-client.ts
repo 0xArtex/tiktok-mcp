@@ -12,7 +12,7 @@ export type ApiResponse = {
   headers: Record<string, string>;
 };
 
-const DEFAULT_API_URL = "https://palmyr.ai";
+const DEFAULT_API_URL = "https://tiktok.palmyr.ai";
 
 export function apiBaseUrl(value = process.env.TIKTOK_API_URL || DEFAULT_API_URL): string {
   const url = new URL(value);

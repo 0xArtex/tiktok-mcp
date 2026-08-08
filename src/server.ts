@@ -61,7 +61,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
   const client = new TikTokApiClient(options.apiUrl);
   const allowLocalFiles = options.allowLocalFiles ?? false;
   const server = new McpServer(
-    { name: "ai.palmyr/tiktok", title: "TikTok MCP", version: "0.1.0" },
+    { name: "ai.palmyr/tiktok", title: "TikTok MCP", version: "0.2.0" },
     {
       instructions:
         "Connect a TikTok account first, then use its account_id for posting, scheduling, engagement, profile updates, and analytics. Paid hosted actions return an x402 challenge when called without payment.",
@@ -101,7 +101,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     },
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
-      return call("POST", "/social/tiktok/connect", body, payment, extra, "tiktok_connect");
+      return call("POST", "/v1/connect", body, payment, extra, "tiktok_connect");
     },
   );
 
@@ -118,7 +118,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     async ({ token }, extra) =>
       call(
         "GET",
-        `/social/tiktok/connect/${encodeURIComponent(token)}`,
+        `/v1/connect/${encodeURIComponent(token)}`,
         undefined,
         undefined,
         extra,
@@ -141,7 +141,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const { payment, body } = paymentFrom(args);
       return call(
         "GET",
-        `/social/tiktok/accounts${queryString({ tag: body.tag })}`,
+        `/v1/accounts${queryString({ tag: body.tag })}`,
         undefined,
         payment,
         extra,
@@ -181,7 +181,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
       const prepared = await prepareVideoInput(body);
-      return call("POST", "/social/tiktok/post", prepared, payment, extra, "tiktok_post");
+      return call("POST", "/v1/post", prepared, payment, extra, "tiktok_post");
     },
   );
 
@@ -198,7 +198,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     async ({ operation_id }, extra) =>
       call(
         "GET",
-        `/social/tiktok/operations/${encodeURIComponent(operation_id)}`,
+        `/v1/operations/${encodeURIComponent(operation_id)}`,
         undefined,
         undefined,
         extra,
@@ -220,7 +220,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     },
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
-      return call("POST", "/social/tiktok/follow", body, payment, extra, "tiktok_follow");
+      return call("POST", "/v1/follow", body, payment, extra, "tiktok_follow");
     },
   );
 
@@ -238,7 +238,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     },
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
-      return call("POST", "/social/tiktok/like", body, payment, extra, "tiktok_like");
+      return call("POST", "/v1/like", body, payment, extra, "tiktok_like");
     },
   );
 
@@ -256,7 +256,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     },
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
-      return call("POST", "/social/tiktok/delete", body, payment, extra, "tiktok_delete");
+      return call("POST", "/v1/delete", body, payment, extra, "tiktok_delete");
     },
   );
 
@@ -280,7 +280,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       }
       return call(
         "POST",
-        "/social/tiktok/profile",
+        "/v1/profile",
         body,
         payment,
         extra,
@@ -312,7 +312,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const prepared = await prepareImageInput(body);
       return call(
         "POST",
-        "/social/tiktok/avatar",
+        "/v1/avatar",
         prepared,
         payment,
         extra,
@@ -334,7 +334,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
     },
     async (args, extra) => {
       const { payment, body } = paymentFrom(args);
-      return call("POST", "/social/tiktok/analytics", body, payment, extra, "tiktok_analytics");
+      return call("POST", "/v1/analytics", body, payment, extra, "tiktok_analytics");
     },
   );
 
@@ -355,7 +355,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const { payment, body } = paymentFrom(args);
       return call(
         "GET",
-        `/social/tiktok/series${queryString(body)}`,
+        `/v1/series${queryString(body)}`,
         undefined,
         payment,
         extra,
@@ -385,7 +385,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const { payment, body } = paymentFrom(args);
       return call(
         "GET",
-        `/social/tiktok/hooks${queryString(body)}`,
+        `/v1/hooks${queryString(body)}`,
         undefined,
         payment,
         extra,
@@ -403,7 +403,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       inputSchema: {},
     },
     async (_args, extra) =>
-      call("GET", "/social/tiktok/niches", undefined, undefined, extra, "tiktok_niches"),
+      call("GET", "/v1/niches", undefined, undefined, extra, "tiktok_niches"),
   );
 
   addTool(
@@ -422,7 +422,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const { payment, body } = paymentFrom(args);
       return call(
         "GET",
-        `/social/tiktok/scheduled${queryString(body)}`,
+        `/v1/scheduled${queryString(body)}`,
         undefined,
         payment,
         extra,
@@ -448,7 +448,7 @@ export function createTikTokServer(options: TikTokServerOptions = {}): McpServer
       const { operation_id, ...requestBody } = body;
       return call(
         "POST",
-        `/social/tiktok/scheduled/${encodeURIComponent(operation_id)}/cancel`,
+        `/v1/scheduled/${encodeURIComponent(operation_id)}/cancel`,
         requestBody,
         payment,
         extra,

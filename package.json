@@ -1,6 +1,6 @@
 {
   "name": "@palmyr/tiktok-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Post, schedule, manage, and analyze TikTok accounts from any MCP-compatible AI agent.",
   "type": "module",
   "main": "dist/index.js",
@@ -12,6 +12,7 @@
     "dist",
     "!dist/tests",
     "README.md",
+    "SKILL.md",
     "LICENSE",
     "server.json"
   ],

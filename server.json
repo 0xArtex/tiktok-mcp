@@ -3,7 +3,7 @@
   "name": "ai.palmyr/tiktok",
   "title": "TikTok MCP",
   "description": "Post, schedule, manage, and analyze TikTok accounts from any MCP-compatible AI agent.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "url": "https://github.com/0xArtex/tiktok-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@palmyr/tiktok-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       }

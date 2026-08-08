@@ -15,7 +15,7 @@ function response(overrides: Partial<ApiResponse>): ApiResponse {
 test("maps an unpaid 402 to an MCP x402 challenge", () => {
   const challenge = {
     x402Version: 2,
-    resource: { url: "https://example.test/social/tiktok/post" },
+    resource: { url: "https://example.test/v1/post" },
     accepts: [{ network: "eip155:8453", amount: "10000" }],
   };
   const result = buildToolResult(

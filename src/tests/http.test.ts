@@ -57,3 +57,37 @@ test("hosted transport initializes and exposes only TikTok tools", async () => {
     });
   }
 });
+
+test("tools call the canonical TikTok v1 API", async () => {
+  let requestedPath = "";
+  // Use a tiny API double instead of the MCP app for the upstream action API.
+  const upstream = (await import("express")).default();
+  upstream.get("/v1/niches", (req, res) => {
+    requestedPath = req.path;
+    res.json({ niches: [] });
+  });
+  const upstreamListener = upstream.listen(0);
+  await once(upstreamListener, "listening");
+  const upstreamPort = (upstreamListener.address() as AddressInfo).port;
+
+  const listener = createHttpApp(`http://127.0.0.1:${upstreamPort}`).listen(0);
+  await once(listener, "listening");
+  const { port } = listener.address() as AddressInfo;
+  const url = `http://127.0.0.1:${port}/mcp`;
+
+  try {
+    const called = await mcpPost(url, {
+      jsonrpc: "2.0",
+      id: 3,
+      method: "tools/call",
+      params: { name: "tiktok_niches", arguments: {} },
+    });
+    assert.equal(called.result.isError, undefined);
+    assert.equal(requestedPath, "/v1/niches");
+  } finally {
+    await Promise.all([
+      new Promise<void>((resolve, reject) => listener.close((error) => error ? reject(error) : resolve())),
+      new Promise<void>((resolve, reject) => upstreamListener.close((error) => error ? reject(error) : resolve())),
+    ]);
+  }
+});

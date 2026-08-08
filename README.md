@@ -2,15 +2,15 @@
 
 Post, schedule, manage, and analyze TikTok accounts from any MCP-compatible AI agent.
 
-- Connect accounts with a secure QR login
-- Post videos now or schedule them for later
+- Connect accounts with secure QR login
+- Post videos now or schedule them
 - Follow users, like videos, and manage profiles
-- Track post analytics, growth, and content hooks
+- Track analytics, growth, and content hooks
 - No API keys or subscriptions
 
 ## Quick start
 
-Add this to your MCP configuration:
+Run the MCP locally by adding it to your agent configuration:
 
 ```json
 {
@@ -29,7 +29,9 @@ Restart your agent, then ask:
 Connect my TikTok account.
 ```
 
-The agent will give you a QR login link. Open it, scan the code with the TikTok app, and the account is ready to use.
+Open the returned link and scan the QR code with the TikTok app. The account is then ready for your agent to use.
+
+The MCP process runs on your machine and can read local media paths. TikTok actions use the hosted x402 API, so there is no API key to configure.
 
 ## Example prompts
 
@@ -45,7 +47,7 @@ Analyze the strongest hooks from my fitness posts.
 Update my bio to "Building useful things in public."
 ```
 
-When the MCP runs locally over stdio, `tiktok_post` accepts a local `video_path` and `tiktok_update_avatar` accepts a local `image_path`. Public URLs work in both local and hosted mode.
+`tiktok_post` accepts a local `video_path`, and `tiktok_update_avatar` accepts a local `image_path`. Public media URLs work too.
 
 ## Tools
 
@@ -68,42 +70,38 @@ When the MCP runs locally over stdio, `tiktok_post` accepts a local `video_path`
 | `tiktok_scheduled` | List scheduled posts |
 | `tiktok_cancel_scheduled` | Cancel a scheduled post |
 
-## Hosted
+## Hosted alternative
 
-The same server can run as a remote Streamable HTTP MCP:
-
-```bash
-npx -y github:0xArtex/tiktok-mcp --http --port 3000
-```
-
-The MCP endpoint is available at `http://localhost:3000/mcp`. The public hosted endpoint will be added here when its DNS and deployment are live.
-
-Hosted actions are paid per request through x402. There are no API keys or subscriptions. Compatible agents handle the payment challenge automatically.
-
-To make the hosted API available as an agent skill:
+If you do not want to run an MCP process locally, use the hosted x402 API directly:
 
 ```bash
-npx agentcash@latest add https://your-tiktok-api.example
+npx agentcash@latest add https://tiktok.palmyr.ai
+npx agentcash@latest discover https://tiktok.palmyr.ai
 ```
 
-You can also discover and call the HTTP endpoints directly:
+Inspect an endpoint before calling it:
 
 ```bash
-npx agentcash@latest discover https://your-tiktok-api.example
+npx agentcash@latest check https://tiktok.palmyr.ai/v1/post
 ```
+
+AgentCash handles the x402 payment automatically:
+
+```bash
+npx agentcash@latest fetch https://tiktok.palmyr.ai/v1/connect \
+  -m POST \
+  -b '{"account_id":"my-brand"}'
+```
+
+- [Agent skill](https://tiktok.palmyr.ai/skill.md)
+- [OpenAPI](https://tiktok.palmyr.ai/openapi.json)
+- [Agentic Market](https://agentic.market/services/tiktok-palmyr-ai)
 
 ## Configuration
 
 | Setting | Default | Description |
 |---|---|---|
-| `TIKTOK_API_URL` | Hosted API | Override the TikTok action API origin |
-| `PORT` | `3000` | Port used with `--http` |
-
-Run the MCP over stdio:
-
-```bash
-npx -y github:0xArtex/tiktok-mcp
-```
+| `TIKTOK_API_URL` | `https://tiktok.palmyr.ai` | Override the TikTok API origin |
 
 ## Development
 
